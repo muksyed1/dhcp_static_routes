@@ -1,0 +1,24 @@
+- name: Configure DHCP with classless static routes
+  hosts: localhost
+  gather_facts: False
+  ##become: yes
+  vars:
+    classless_static_routes:
+      - prefix: 8
+        dest: [10, 0]              # ✅ 2 octets for /8
+        gateway: [10, 10, 10, 1]
+    
+      - prefix: 12
+        dest: [172, 16]
+        gateway: [10, 10, 10, 1]
+    
+      - prefix: 16
+        dest: [192, 168]
+        gateway: [10, 10, 10, 1]
+  tasks:
+    - name: Deploy dhcpd.conf
+      template:
+        src: dhcpd.conf.j2
+        dest: dhcpd-test.conf
+        owner: msyed
+        group: 1452823688
